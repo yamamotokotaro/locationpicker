@@ -137,7 +137,7 @@ class PlacePickerState extends State<PlacePicker> {
           locationResult = null;
           _delayedPop();
           return Future.value(false);
-        }  else  {
+        } else {
           return Future.value(true);
         }
       },
@@ -193,7 +193,8 @@ class PlacePickerState extends State<PlacePicker> {
                     Padding(
                       child: Text(widget.localizationItem!.nearBy,
                           style: TextStyle(fontSize: 16)),
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                     ),
                     Expanded(
                       child: ListView(
@@ -310,6 +311,8 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
+      print(responseJson);
+
       if (responseJson['predictions'] == null) {
         throw Error();
       }
@@ -366,6 +369,7 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
+      print(responseJson);
       if (responseJson['result'] == null) {
         throw Error();
       }
@@ -447,6 +451,7 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
+      print(responseJson);
       if (responseJson['results'] == null) {
         throw Error();
       }
@@ -490,6 +495,7 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
+      print(responseJson);
       if (responseJson['results'] == null) {
         throw Error();
       }
