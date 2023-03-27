@@ -311,8 +311,6 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
-      print(responseJson);
-
       if (responseJson['predictions'] == null) {
         throw Error();
       }
@@ -369,7 +367,6 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
-      print(responseJson);
       if (responseJson['result'] == null) {
         throw Error();
       }
@@ -451,7 +448,6 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
-      print(responseJson);
       if (responseJson['results'] == null) {
         throw Error();
       }
@@ -495,7 +491,6 @@ class PlacePickerState extends State<PlacePicker> {
 
       final responseJson = jsonDecode(response.body);
 
-      print(responseJson);
       if (responseJson['results'] == null) {
         throw Error();
       }
