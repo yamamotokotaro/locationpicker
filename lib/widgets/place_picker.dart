@@ -355,10 +355,6 @@ class PlacePickerState extends State<PlacePicker> {
     clearOverlay();
 
     try {
-      final url = Uri.parse(
-          "https://maps.googleapis.com/maps/api/place/details/json?key=${widget.apiKey}&" +
-              "language=${widget.localizationItem!.languageCode}&" +
-              "placeid=$placeId");
       HttpsCallable callable =
           FirebaseFunctions.instanceFor(region: 'asia-northeast1')
               .httpsCallable(
