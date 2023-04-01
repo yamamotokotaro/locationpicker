@@ -299,18 +299,27 @@ class PlacePickerState extends State<PlacePicker> {
           "language=${widget.localizationItem!.languageCode}&"
           "input={$place}&sessiontoken=${this.sessionToken}";
 
+      HttpsCallable callable =
+          FirebaseFunctions.instanceFor(region: 'asia-northeast1')
+              .httpsCallable(
+        'placeApi',
+        options: HttpsCallableOptions(
+          timeout: const Duration(seconds: 5),
+        ),
+      );
+
+      final response = await callable.call({
+        'type': 'place',
+        'params':
+            "language=${widget.localizationItem!.languageCode}&input={$place}&sessiontoken=${this.sessionToken}"
+      });
+
       if (this.locationResult != null) {
         endpoint += "&location=${this.locationResult!.latLng?.latitude}," +
             "${this.locationResult!.latLng?.longitude}";
       }
 
-      final response = await http.get(Uri.parse(endpoint));
-
-      if (response.statusCode != 200) {
-        throw Error();
-      }
-
-      final responseJson = jsonDecode(response.body);
+      final responseJson = jsonDecode(response);
 
       if (responseJson['predictions'] == null) {
         throw Error();
