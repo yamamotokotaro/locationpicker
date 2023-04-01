@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -358,14 +359,21 @@ class PlacePickerState extends State<PlacePicker> {
           "https://maps.googleapis.com/maps/api/place/details/json?key=${widget.apiKey}&" +
               "language=${widget.localizationItem!.languageCode}&" +
               "placeid=$placeId");
+      HttpsCallable callable =
+          FirebaseFunctions.instanceFor(region: 'asia-northeast1')
+              .httpsCallable(
+        'placeApi',
+        options: HttpsCallableOptions(
+          timeout: const Duration(seconds: 5),
+        ),
+      );
+      final response = await callable.call({
+        'type': 'place',
+        'params':
+            "language=${widget.localizationItem!.languageCode}&placeid=$placeId"
+      });
 
-      final response = await http.get(url);
-
-      if (response.statusCode != 200) {
-        throw Error();
-      }
-
-      final responseJson = jsonDecode(response.body);
+      final responseJson = jsonDecode(response.data);
 
       if (responseJson['result'] == null) {
         throw Error();
