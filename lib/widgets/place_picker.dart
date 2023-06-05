@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -133,7 +134,13 @@ class PlacePickerState extends State<PlacePicker> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (Platform.isAndroid) {
+        bool isAndroid = false;
+        try {
+          isAndroid = Platform.isAndroid;
+        } catch (e) {
+          print(e);
+        }
+        if (isAndroid) {
           locationResult = null;
           _delayedPop();
           return Future.value(false);
@@ -183,7 +190,13 @@ class PlacePickerState extends State<PlacePicker> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SelectPlaceAction(getLocationName(), () {
-                      if (Platform.isAndroid) {
+                      bool isAndroid = false;
+                      try {
+                        isAndroid = Platform.isAndroid;
+                      } catch (e) {
+                        print(e);
+                      }
+                      if (isAndroid) {
                         _delayedPop();
                       } else {
                         Navigator.of(context).pop(this.locationResult);
@@ -658,7 +671,13 @@ class PlacePickerState extends State<PlacePicker> {
   }
 
   Future<dynamic> _showLocationDisabledAlertDialog(BuildContext context) {
-    if (Platform.isIOS) {
+    bool isIOS = false;
+    try {
+      isIOS = Platform.isIOS;
+    } catch (e) {
+      print(e);
+    }
+    if (isIOS) {
       return showCupertinoDialog(
           context: context,
           builder: (BuildContext ctx) {
