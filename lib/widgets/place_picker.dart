@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -293,33 +292,24 @@ class PlacePickerState extends State<PlacePicker> {
     try {
       place = place.replaceAll(" ", "+");
 
-      var endpoint =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?"
+      var endpoint = "https://placeapi-qqur726oha-an.a.run.app?"
           "key=${widget.apiKey}&"
           "language=${widget.localizationItem!.languageCode}&"
-          "input={$place}&sessiontoken=${this.sessionToken}";
-
-      HttpsCallable callable =
-          FirebaseFunctions.instanceFor(region: 'asia-northeast1')
-              .httpsCallable(
-        'placeApi',
-        options: HttpsCallableOptions(
-          timeout: const Duration(seconds: 5),
-        ),
-      );
-
-      final response = await callable.call({
-        'type': 'place',
-        'params':
-            "language=${widget.localizationItem!.languageCode}&input={$place}&sessiontoken=${this.sessionToken}"
-      });
+          "input={$place}&sessiontoken=${this.sessionToken}&"
+          "requestType=autocomplete";
 
       if (this.locationResult != null) {
         endpoint += "&location=${this.locationResult!.latLng?.latitude}," +
             "${this.locationResult!.latLng?.longitude}";
       }
 
-      final responseJson = jsonDecode(response);
+      final response = await http.get(Uri.parse(endpoint));
+
+      if (response.statusCode != 200) {
+        throw Error();
+      }
+
+      final responseJson = jsonDecode(response.body);
 
       if (responseJson['predictions'] == null) {
         throw Error();
@@ -364,21 +354,19 @@ class PlacePickerState extends State<PlacePicker> {
     clearOverlay();
 
     try {
-      HttpsCallable callable =
-          FirebaseFunctions.instanceFor(region: 'asia-northeast1')
-              .httpsCallable(
-        'placeApi',
-        options: HttpsCallableOptions(
-          timeout: const Duration(seconds: 5),
-        ),
-      );
-      final response = await callable.call({
-        'type': 'place',
-        'params':
-            "language=${widget.localizationItem!.languageCode}&placeid=$placeId"
-      });
+      final url = Uri.parse(
+          "https://placeapi-qqur726oha-an.a.run.app?key=${widget.apiKey}&" +
+              "language=${widget.localizationItem!.languageCode}&" +
+              "placeid=$placeId&" +
+              "requestType=details");
 
-      final responseJson = jsonDecode(response.data);
+      final response = await http.get(url);
+
+      if (response.statusCode != 200) {
+        throw Error();
+      }
+
+      final responseJson = jsonDecode(response.body);
 
       if (responseJson['result'] == null) {
         throw Error();
@@ -448,10 +436,10 @@ class PlacePickerState extends State<PlacePicker> {
   /// Fetches and updates the nearby places to the provided lat,lng
   void getNearbyPlaces(LatLng latLng) async {
     try {
-      final url = Uri.parse(
-          "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
+      final url = Uri.parse("https://placeapi-qqur726oha-an.a.run.app?"
           "key=${widget.apiKey}&location=${latLng.latitude},${latLng.longitude}"
-          "&radius=150&language=${widget.localizationItem!.languageCode}");
+          "&radius=150&language=${widget.localizationItem!.languageCode}"
+          "&requestType=nearbysearch");
 
       final response = await http.get(url);
 
