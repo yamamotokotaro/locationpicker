@@ -370,7 +370,7 @@ class PlacePickerState extends State<PlacePicker> {
       final url = Uri.parse(
           "https://placeapi-qqur726oha-an.a.run.app?key=${widget.apiKey}&" +
               "language=${widget.localizationItem!.languageCode}&" +
-              "placeid=$placeId&" +
+              "placeId=$placeId&" +
               "requestType=details");
 
       final response = await http.get(url);
